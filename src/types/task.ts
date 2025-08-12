@@ -11,3 +11,10 @@ export interface Task {
 	createdAt: Date;
 	updatedAt: Date;
 }
+
+export interface JSONPlaceholderTodo {
+	userId: number;
+	id: number;
+	title: string;
+	completed: boolean;
+}
