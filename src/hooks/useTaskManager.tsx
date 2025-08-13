@@ -1,11 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
-import { fetchTasks } from '../services/api';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { createTask, fetchTasks } from '../services/api';
 import { useState } from 'react';
-import type { FilterType } from '../types/task';
-import {
-	formatParams,
-	transformJSONPlaceholderTodo,
-} from '../utils/taskHelper';
+import type { FilterType, JSONPlaceholderTodo } from '../types/task';
+import { transformJSONPlaceholderTodo } from '../utils/taskHelper';
 
 export function useTaskManager() {
 	const [searchTerm, setSearchTerm] = useState<string>('');
@@ -24,9 +21,14 @@ export function useTaskManager() {
 		refetch,
 	} = useQuery({
 		queryKey: ['tasks', { searchTerm, filter }],
-		queryFn: () => fetchTasks(formatParams(filterParams)),
+		queryFn: () => fetchTasks(filterParams),
 		select: data => data.map(transformJSONPlaceholderTodo),
 		retry: 1,
+	});
+
+	const { mutateAsync: addTask } = useMutation({
+		mutationKey: ['add-task'],
+		mutationFn: (data: Partial<JSONPlaceholderTodo>) => createTask(data),
 	});
 
 	console.log('--hook', tasks);
@@ -40,6 +42,7 @@ export function useTaskManager() {
 		searchTerm,
 		setSearchTerm,
 		setFilter,
+		addTask,
 	};
 }
 

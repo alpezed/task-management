@@ -2,8 +2,11 @@ import React, { useState, useCallback } from 'react';
 import type { TaskPriority } from '../../types/task';
 import { AddNewTaskButton } from './AddNewTaskButton';
 import { TaskFormHeader } from './TaskFormHeader';
+import { useTaskContext } from '../../context/TaskContext';
 
 const TaskForm = React.memo(() => {
+	const { addTask } = useTaskContext();
+
 	const [isOpen, setIsOpen] = useState(false);
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
@@ -23,12 +26,12 @@ const TaskForm = React.memo(() => {
 	}, []);
 
 	const handleSubmit = useCallback(
-		(e: React.FormEvent) => {
+		async (e: React.FormEvent) => {
 			e.preventDefault();
-
+			await addTask({ title, completed: false });
 			closeForm();
 		},
-		[closeForm]
+		[title, closeForm, addTask]
 	);
 
 	const handleKeyDown = useCallback(
