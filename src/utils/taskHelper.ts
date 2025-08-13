@@ -31,7 +31,7 @@ export const formatParams = (filters: Record<string, unknown>) => {
 	const formatParams = Object.fromEntries(
 		Object.entries(filters)
 			.filter(
-				([_, value]) => value !== undefined && value !== '' && value !== null
+				([, value]) => value !== undefined && value !== '' && value !== null
 			)
 			.map(([key, value]) => [key, String(value)])
 	);
