@@ -3,6 +3,8 @@ import Header from './components/Header/Header';
 import Controls from './components/Controls/Controls';
 import TaskForm from './components/TaskForm/TaskForm';
 import { TaskProvider } from './context/TaskContext';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './utils/react-query';
 
 function AppContent() {
 	return (
@@ -19,9 +21,11 @@ function AppContent() {
 
 function App() {
 	return (
-		<TaskProvider>
-			<AppContent />
-		</TaskProvider>
+		<QueryClientProvider client={queryClient}>
+			<TaskProvider>
+				<AppContent />
+			</TaskProvider>
+		</QueryClientProvider>
 	);
 }
 
