@@ -1,9 +1,18 @@
-import { TaskItem } from '../TaskItem/TaskItem';
+import { useTaskManager } from "../../hooks/useTaskManager";
+import { TaskItem } from "../TaskItem/TaskItem";
 
-export const TaskList = () => {
+export function TaskList() {
+	const { tasks, loading } = useTaskManager();
+
+	console.log({ tasks });
+
+	if (loading) {
+		return <div>Loading...</div>;
+	}
+
 	return (
 		<div>
 			<TaskItem />
 		</div>
 	);
-};
+}
