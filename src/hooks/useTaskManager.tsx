@@ -70,16 +70,6 @@ export function useTaskManager() {
 				variant: 'error',
 			});
 		},
-		onSuccess: data => {
-			enqueueSnackbar(
-				<p>
-					Task <strong>"{data.title}"</strong> updated successfully
-				</p>,
-				{
-					variant: 'success',
-				}
-			);
-		},
 	});
 
 	const addTask = useCallback(
@@ -134,10 +124,27 @@ export function useTaskManager() {
 				}))
 			);
 
-			updateTodo({
-				id: taskId,
-				payload: { completed: task?.status === 'active' },
-			});
+			const payload = {
+				title: task?.title,
+				completed: task?.status === 'active',
+			};
+
+			updateTodo(
+				{ id: taskId, payload },
+				{
+					onSuccess: () => {
+						enqueueSnackbar(
+							<p>
+								Task <strong>"{task?.title}"</strong> mark as{' '}
+								<strong>{task?.status}</strong>
+							</p>,
+							{
+								variant: 'success',
+							}
+						);
+					},
+				}
+			);
 		},
 		[tasks, queryClient, updateTodo]
 	);
@@ -147,7 +154,21 @@ export function useTaskManager() {
 			taskId: string,
 			payload: Pick<Task, 'title' | 'description' | 'priority'>
 		) => {
-			await updateTodo({ id: taskId, payload: { title: payload.title } });
+			await updateTodo(
+				{ id: taskId, payload: { title: payload.title } },
+				{
+					onSuccess: () => {
+						enqueueSnackbar(
+							<p>
+								Task <strong>"{payload.title}"</strong> updated successfully
+							</p>,
+							{
+								variant: 'success',
+							}
+						);
+					},
+				}
+			);
 
 			queryClient.setQueryData(['tasks'], (old: JSONPlaceholderTodo[]) =>
 				old.map(task => ({
