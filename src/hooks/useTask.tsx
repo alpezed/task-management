@@ -97,6 +97,9 @@ export function useTask(task: Task) {
 		getPriorityColor,
 		getPriorityIcon,
 		formatDate,
+		setEditTitle,
+		setEditDescription,
+		setEditPriority,
 	};
 }
 
