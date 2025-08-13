@@ -1,14 +1,20 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { createTask, fetchTasks } from '../services/api';
-import { useState } from 'react';
-import type { FilterType, JSONPlaceholderTodo } from '../types/task';
-import { transformJSONPlaceholderTodo } from '../utils/taskHelper';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createNewTask, fetchTasks } from '../services/api';
+import { useCallback, useState } from 'react';
+import type {
+	FilterParams,
+	FilterType,
+	JSONPlaceholderTodo,
+	Task,
+} from '../types/task';
+import { createTask, transformJSONPlaceholderTodo } from '../utils/taskHelper';
 
 export function useTaskManager() {
+	const queryClient = useQueryClient();
 	const [searchTerm, setSearchTerm] = useState<string>('');
 	const [filter, setFilter] = useState<FilterType>('all');
 
-	const filterParams: Record<string, unknown> = {
+	const filterParams: FilterParams = {
 		title: searchTerm || undefined,
 		completed:
 			filter === 'completed' ? true : filter === 'active' ? false : undefined,
@@ -26,16 +32,43 @@ export function useTaskManager() {
 		retry: 1,
 	});
 
-	const { mutateAsync: addTask } = useMutation({
-		mutationKey: ['add-task'],
-		mutationFn: (data: Partial<JSONPlaceholderTodo>) => createTask(data),
+	const { mutateAsync: createTodo, isPending: isAddingTask } = useMutation({
+		mutationFn: (data: Partial<JSONPlaceholderTodo>) => createNewTask(data),
+		onError: err => {
+			console.warn('Failed to sync new task with API:', err);
+		},
 	});
 
-	console.log('--hook', tasks);
+	const addTask = useCallback(
+		async (taskData: {
+			title: string;
+			description: string;
+			priority: Task['priority'];
+		}) => {
+			await createTodo({
+				title: taskData.title,
+				completed: false,
+				userId: 1,
+			});
+
+			const newTask = createTask(
+				taskData.title,
+				taskData.description,
+				taskData.priority
+			);
+
+			queryClient.setQueryData(
+				['tasks', { searchTerm, filter }],
+				(old: JSONPlaceholderTodo[]) => [{ ...newTask, userId: 1 }, ...old]
+			);
+		},
+		[]
+	);
 
 	return {
 		tasks,
 		loading: isLoading,
+		adding: isAddingTask,
 		error: error?.message,
 		refreshTasks: refetch,
 		filter,

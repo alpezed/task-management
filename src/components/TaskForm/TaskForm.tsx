@@ -5,7 +5,7 @@ import { TaskFormHeader } from './TaskFormHeader';
 import { useTaskContext } from '../../context/TaskContext';
 
 const TaskForm = React.memo(() => {
-	const { addTask } = useTaskContext();
+	const { adding, addTask } = useTaskContext();
 
 	const [isOpen, setIsOpen] = useState(false);
 	const [title, setTitle] = useState('');
@@ -28,10 +28,16 @@ const TaskForm = React.memo(() => {
 	const handleSubmit = useCallback(
 		async (e: React.FormEvent) => {
 			e.preventDefault();
-			await addTask({ title, completed: false });
+
+			await addTask({
+				title: title.trim(),
+				description: description.trim(),
+				priority,
+			});
+
 			closeForm();
 		},
-		[title, closeForm, addTask]
+		[title, description, priority, closeForm, addTask]
 	);
 
 	const handleKeyDown = useCallback(
@@ -138,8 +144,8 @@ const TaskForm = React.memo(() => {
 					</button>
 					<button
 						type='submit'
-						disabled={!title.trim()}
-						className='flex-1 px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150'
+						disabled={adding || !title.trim()}
+						className='flex-1 px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150 cursor-pointer'
 					>
 						Add Task
 					</button>

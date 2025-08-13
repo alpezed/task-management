@@ -1,7 +1,11 @@
-import type { JSONPlaceholderTodo, Task } from '../types/task';
+import type { JSONPlaceholderTodo, Task, TaskStatus } from '../types/task';
+
+export const generateId = (): string => {
+	return Date.now().toString(36) + Math.random().toString(36).substr(2);
+};
 
 export const transformJSONPlaceholderTodo = (
-	todo: JSONPlaceholderTodo
+	todo: JSONPlaceholderTodo & Pick<Partial<Task>, 'description' | 'priority'>
 ): Task => {
 	const now = new Date();
 	const priorities: Task['priority'][] = ['low', 'medium', 'high'];
@@ -11,9 +15,11 @@ export const transformJSONPlaceholderTodo = (
 	return {
 		id: todo.id.toString(),
 		title: todo.title,
-		description: `Task imported from JSONPlaceholder (User ${todo.userId})`,
+		description:
+			todo.description ??
+			`Task imported from JSONPlaceholder (User ${todo.userId})`,
 		status: todo.completed ? 'completed' : 'active',
-		priority: randomPriority,
+		priority: todo.priority ?? randomPriority,
 		createdAt: new Date(
 			now.getTime() - Math.random() * 7 * 24 * 60 * 60 * 1000
 		), // Random date within last week
@@ -36,4 +42,21 @@ export const formatParams = (filters: Record<string, unknown>) => {
 	});
 
 	return params;
+};
+
+export const createTask = (
+	title: string,
+	description: string,
+	priority: Task['priority']
+): Task => {
+	const now = new Date();
+	return {
+		id: generateId(),
+		title: title.trim(),
+		description: description.trim(),
+		status: 'active' as TaskStatus,
+		priority,
+		createdAt: now,
+		updatedAt: now,
+	};
 };

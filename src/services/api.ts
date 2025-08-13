@@ -1,9 +1,13 @@
-import type { JSONPlaceholderTodo } from '../types/task';
+import type { FilterParams, JSONPlaceholderTodo } from '../types/task';
 
-export async function fetchTasks(filters: Record<string, unknown>) {
+export async function fetchTasks(filters: FilterParams) {
 	const url = new URL(`${import.meta.env.VITE_API_BASE_URL}/todos`);
-	url.searchParams.append('limit', '10');
-	url.searchParams.append('completed', 'false');
+	url.searchParams.append('_limit', '10');
+	Object.entries(filters).forEach(([key, value]) => {
+		if (typeof value !== 'undefined') {
+			url.searchParams.append(key, value);
+		}
+	});
 
 	const result = await fetch(url);
 
@@ -16,7 +20,7 @@ export async function fetchTasks(filters: Record<string, unknown>) {
 	return response;
 }
 
-export async function createTask(input: Partial<JSONPlaceholderTodo>) {
+export async function createNewTask(input: Partial<JSONPlaceholderTodo>) {
 	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/todos`, {
 		method: 'POST',
 		headers: {
