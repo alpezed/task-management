@@ -65,7 +65,7 @@ export async function editTask(
 	);
 
 	if (!response.ok) {
-		throw new Error(`Failed to delete todo`);
+		throw new Error(`Failed to update todo`);
 	}
 
 	const result = (await response.json()) as JSONPlaceholderTodo;
