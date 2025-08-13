@@ -1,4 +1,4 @@
-import type { JSONPlaceholderTodo, Task } from '../types/task';
+import type { JSONPlaceholderTodo } from '../types/task';
 
 export async function fetchTasks() {
 	const result = await fetch(
@@ -45,7 +45,7 @@ export async function deleteTask(taskId: string) {
 
 export async function editTask(
 	taskId: string,
-	input: Pick<Task, 'title' | 'description' | 'priority'>
+	input: Pick<Partial<JSONPlaceholderTodo>, 'title' | 'completed'>
 ) {
 	const response = await fetch(
 		`${import.meta.env.VITE_API_BASE_URL}/todos/${taskId}`,

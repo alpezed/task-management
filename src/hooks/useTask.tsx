@@ -5,7 +5,7 @@ import { AlertCircle, CheckCircle, Clock } from 'lucide-react';
 import { useTaskContext } from '../context/TaskContext';
 
 export function useTask(task: Task) {
-	const { updateTask, deleteTask } = useTaskContext();
+	const { updateTask, deleteTask, toggleTaskStatus } = useTaskContext();
 
 	const [isEditing, setIsEditing] = useState(false);
 	const [isSubmitting, setSubmitting] = useState(false);
@@ -14,10 +14,13 @@ export function useTask(task: Task) {
 	const [editPriority, setEditPriority] = useState(task.priority);
 	const [error, setError] = useState('');
 
-	const handleToggleStatus = useCallback((e: React.MouseEvent) => {
-		e.stopPropagation();
-		// toggle task
-	}, []);
+	const handleToggleStatus = useCallback(
+		(e: React.MouseEvent) => {
+			e.stopPropagation();
+			toggleTaskStatus(task.id);
+		},
+		[task, toggleTaskStatus]
+	);
 
 	const handleDelete = useCallback(
 		(e: React.MouseEvent) => {

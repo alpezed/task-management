@@ -48,7 +48,7 @@ export function useTaskManager() {
 	const { mutateAsync: updateTodo } = useMutation({
 		mutationFn: (data: {
 			id: string;
-			payload: Pick<Task, 'title' | 'description' | 'priority'>;
+			payload: Pick<Partial<JSONPlaceholderTodo>, 'title' | 'completed'>;
 		}) => editTask(data.id, data.payload),
 		onError: err => {
 			console.warn('Error updating todo:', err);
@@ -95,12 +95,32 @@ export function useTaskManager() {
 		[deleteTodo, queryClient]
 	);
 
+	const toggleTaskStatus = useCallback(
+		(taskId: string) => {
+			const task = tasks?.find(t => t.id === taskId);
+			queryClient.setQueryData(['tasks'], (old: JSONPlaceholderTodo[]) =>
+				old.map(task => ({
+					...task,
+					...(task.id.toString() === taskId
+						? { ...task, completed: !task.completed }
+						: task),
+				}))
+			);
+
+			updateTodo({
+				id: taskId,
+				payload: { completed: task?.status === 'active' },
+			});
+		},
+		[tasks, queryClient, updateTodo]
+	);
+
 	const updateTask = useCallback(
 		async (
 			taskId: string,
 			payload: Pick<Task, 'title' | 'description' | 'priority'>
 		) => {
-			await updateTodo({ id: taskId, payload });
+			await updateTodo({ id: taskId, payload: { title: payload.title } });
 
 			queryClient.setQueryData(['tasks'], (old: JSONPlaceholderTodo[]) =>
 				old.map(task => ({
@@ -134,6 +154,7 @@ export function useTaskManager() {
 		deleteTask: onDeleteTask,
 		updateTask,
 		taskCounts,
+		toggleTaskStatus,
 	};
 }
 
