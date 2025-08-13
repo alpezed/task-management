@@ -6,15 +6,11 @@ import {
 	fetchTasks,
 } from '../services/api';
 import { useCallback, useMemo, useState } from 'react';
-import type {
-	FilterParams,
-	FilterType,
-	JSONPlaceholderTodo,
-	Task,
-} from '../types/task';
+import type { FilterType, JSONPlaceholderTodo, Task } from '../types/task';
 import {
 	calculateTaskCounts,
 	createTask,
+	filterTasks,
 	transformJSONPlaceholderTodo,
 } from '../utils/taskHelper';
 
@@ -23,20 +19,14 @@ export function useTaskManager() {
 	const [searchTerm, setSearchTerm] = useState<string>('');
 	const [filter, setFilter] = useState<FilterType>('all');
 
-	const filterParams: FilterParams = {
-		title: searchTerm || undefined,
-		completed:
-			filter === 'completed' ? true : filter === 'active' ? false : undefined,
-	};
-
 	const {
 		data: tasks,
 		isLoading,
 		error,
 		refetch,
 	} = useQuery({
-		queryKey: ['tasks', { searchTerm, filter }],
-		queryFn: () => fetchTasks(filterParams),
+		queryKey: ['tasks'],
+		queryFn: () => fetchTasks(),
 		select: data => data.map(transformJSONPlaceholderTodo),
 		retry: 1,
 	});
@@ -126,6 +116,11 @@ export function useTaskManager() {
 		[filter, searchTerm, queryClient, updateTodo]
 	);
 
+	const filteredTasks = useMemo(
+		() => filterTasks(tasks ?? [], filter, searchTerm),
+		[tasks, filter, searchTerm]
+	);
+
 	const taskCounts = useMemo(() => calculateTaskCounts(tasks ?? []), [tasks]);
 
 	return {
@@ -135,6 +130,7 @@ export function useTaskManager() {
 		error: error?.message,
 		refreshTasks: refetch,
 		filter,
+		filteredTasks,
 		searchTerm,
 		setSearchTerm,
 		setFilter,

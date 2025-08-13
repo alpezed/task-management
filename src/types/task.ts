@@ -18,8 +18,3 @@ export interface JSONPlaceholderTodo {
 	title: string;
 	completed: boolean;
 }
-
-export interface FilterParams {
-	title: string | undefined;
-	completed: boolean | undefined;
-}

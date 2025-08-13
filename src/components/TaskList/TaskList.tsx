@@ -5,7 +5,7 @@ import { TaskListError } from './TaskListError';
 import { TaskListLoader } from './TaskListLoader';
 
 export function TaskList() {
-	const { tasks, loading, error } = useTaskContext();
+	const { filteredTasks, loading, error } = useTaskContext();
 
 	if (loading) {
 		return <TaskListLoader />;
@@ -17,7 +17,7 @@ export function TaskList() {
 
 	return (
 		<div className='space-y-4' role='list' aria-label='Task list'>
-			{tasks?.map(task => (
+			{filteredTasks?.map(task => (
 				<div key={task.id} role='listitem'>
 					<TaskItemProvider task={task}>
 						<TaskItem />

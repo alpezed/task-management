@@ -1,15 +1,9 @@
-import type { FilterParams, JSONPlaceholderTodo, Task } from '../types/task';
+import type { JSONPlaceholderTodo, Task } from '../types/task';
 
-export async function fetchTasks(filters: FilterParams) {
-	const url = new URL(`${import.meta.env.VITE_API_BASE_URL}/todos`);
-	url.searchParams.append('_limit', '10');
-	Object.entries(filters).forEach(([key, value]) => {
-		if (typeof value !== 'undefined') {
-			url.searchParams.append(key, value);
-		}
-	});
-
-	const result = await fetch(url);
+export async function fetchTasks() {
+	const result = await fetch(
+		`${import.meta.env.VITE_API_BASE_URL}/todos?_limit=10`
+	);
 
 	if (!result.ok) {
 		throw new Error(`Failed to fetch todos`);

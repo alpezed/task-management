@@ -1,4 +1,9 @@
-import type { JSONPlaceholderTodo, Task, TaskStatus } from '../types/task';
+import type {
+	FilterType,
+	JSONPlaceholderTodo,
+	Task,
+	TaskStatus,
+} from '../types/task';
 
 export const generateId = (): string => {
 	return Date.now().toString(36) + Math.random().toString(36).substr(2);
@@ -67,4 +72,39 @@ export const calculateTaskCounts = (tasks: Task[]) => {
 	const completed = tasks.filter(task => task.status === 'completed').length;
 
 	return { total, active, completed };
+};
+
+export const filterTasks = (
+	tasks: Task[],
+	filter: FilterType,
+	searchTerm: string
+): Task[] => {
+	let filtered = tasks;
+
+	if (filter !== 'all') {
+		filtered = filtered.filter(task => task.status === filter);
+	}
+
+	if (searchTerm.trim()) {
+		const term = searchTerm.toLowerCase().trim();
+		filtered = filtered.filter(
+			task =>
+				task.title.toLowerCase().includes(term) ||
+				task.description.toLowerCase().includes(term)
+		);
+	}
+
+	return filtered.sort((a, b) => {
+		// Sort by status (active first), then by priority, then by creation date
+		if (a.status !== b.status) {
+			return a.status === 'active' ? -1 : 1;
+		}
+
+		const priorityOrder = { high: 3, medium: 2, low: 1 };
+		if (a.priority !== b.priority) {
+			return priorityOrder[b.priority] - priorityOrder[a.priority];
+		}
+
+		return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+	});
 };
