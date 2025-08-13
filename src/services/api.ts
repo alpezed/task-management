@@ -1,4 +1,4 @@
-import type { FilterParams, JSONPlaceholderTodo } from '../types/task';
+import type { FilterParams, JSONPlaceholderTodo, Task } from '../types/task';
 
 export async function fetchTasks(filters: FilterParams) {
 	const url = new URL(`${import.meta.env.VITE_API_BASE_URL}/todos`);
@@ -47,4 +47,28 @@ export async function deleteTask(taskId: string) {
 	if (!response.ok) {
 		throw new Error(`Failed to delete todo`);
 	}
+}
+
+export async function editTask(
+	taskId: string,
+	input: Pick<Task, 'title' | 'description' | 'priority'>
+) {
+	const response = await fetch(
+		`${import.meta.env.VITE_API_BASE_URL}/todos/${taskId}`,
+		{
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ ...input, userId: 1 }),
+		}
+	);
+
+	if (!response.ok) {
+		throw new Error(`Failed to delete todo`);
+	}
+
+	const result = (await response.json()) as JSONPlaceholderTodo;
+
+	return result;
 }
