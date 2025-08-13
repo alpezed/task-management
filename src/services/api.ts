@@ -35,3 +35,16 @@ export async function createNewTask(input: Partial<JSONPlaceholderTodo>) {
 
 	return await response.json();
 }
+
+export async function deleteTask(taskId: number) {
+	const response = await fetch(
+		`${import.meta.env.VITE_API_BASE_URL}/todos/${taskId}`,
+		{
+			method: 'DELETE',
+		}
+	);
+
+	if (!response.ok) {
+		throw new Error(`Failed to delete todo`);
+	}
+}
