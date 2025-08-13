@@ -138,7 +138,7 @@ const TaskForm = React.memo(() => {
 					<button
 						type='button'
 						onClick={closeForm}
-						className='flex-1 px-4 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors duration-150'
+						className='flex-1 cursor-pointer px-4 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors duration-150'
 					>
 						Cancel
 					</button>
