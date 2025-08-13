@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Search, X } from 'lucide-react';
+import { useTaskContext } from '../../context/TaskContext';
 
 const SearchBar = React.memo(() => {
-	const [searchTerm, setSearchTerm] = useState<string>();
+	const { searchTerm, setSearchTerm } = useTaskContext();
 
 	const handleSearchChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {

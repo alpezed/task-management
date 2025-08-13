@@ -1,8 +1,8 @@
 import type { JSONPlaceholderTodo } from '../types/task';
 
-export async function fetchTasks() {
+export async function fetchTasks(filters: URLSearchParams) {
 	const result = await fetch(
-		`${import.meta.env.VITE_API_BASE_URL}/todos/?_limit=10`
+		`${import.meta.env.VITE_API_BASE_URL}/todos/?${filters}`
 	);
 
 	if (!result.ok) {

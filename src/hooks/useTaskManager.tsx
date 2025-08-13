@@ -1,12 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchTasks } from '../services/api';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import type { FilterType } from '../types/task';
-import { filterTasks, transformJSONPlaceholderTodo } from '../utils/taskHelper';
+import {
+	formatParams,
+	transformJSONPlaceholderTodo,
+} from '../utils/taskHelper';
 
 export function useTaskManager() {
 	const [searchTerm, setSearchTerm] = useState<string>('');
 	const [filter, setFilter] = useState<FilterType>('all');
+
+	const filterParams: Record<string, unknown> = {
+		title: searchTerm || undefined,
+		completed:
+			filter === 'completed' ? true : filter === 'active' ? false : undefined,
+	};
 
 	const {
 		data: tasks,
@@ -14,24 +23,21 @@ export function useTaskManager() {
 		error,
 		refetch,
 	} = useQuery({
-		queryKey: ['tasks'],
-		queryFn: fetchTasks,
+		queryKey: ['tasks', { searchTerm, filter }],
+		queryFn: () => fetchTasks(formatParams(filterParams)),
 		select: data => data.map(transformJSONPlaceholderTodo),
 		retry: 1,
 	});
 
-	const filteredTasks = useMemo(() => {
-		if (tasks) {
-			filterTasks(tasks, filter, searchTerm);
-		}
-	}, [tasks, filter, searchTerm]);
+	console.log('--hook', tasks);
 
 	return {
 		tasks,
 		loading: isLoading,
 		error: error?.message,
 		refreshTasks: refetch,
-		filteredTasks,
+		filter,
+		searchTerm,
 		setSearchTerm,
 		setFilter,
 	};

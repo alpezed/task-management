@@ -5,6 +5,7 @@ import TaskForm from './components/TaskForm/TaskForm';
 import { TaskProvider } from './context/TaskContext';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './utils/reactQuery';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 function AppContent() {
 	return (
@@ -25,6 +26,7 @@ function App() {
 			<TaskProvider>
 				<AppContent />
 			</TaskProvider>
+			<ReactQueryDevtools />
 		</QueryClientProvider>
 	);
 }

@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import type { FilterType } from '../../types/task';
+import { useTaskManager } from '../../hooks/useTaskManager';
 
 const TaskFilter = React.memo(() => {
-	const [filter, setFilter] = useState<FilterType>('all');
+	const { filter, setFilter } = useTaskManager();
 
 	const taskCounts = {
 		total: 100,

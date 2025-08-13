@@ -1,4 +1,4 @@
-import type { FilterType, JSONPlaceholderTodo, Task } from '../types/task';
+import type { JSONPlaceholderTodo, Task } from '../types/task';
 
 export const transformJSONPlaceholderTodo = (
 	todo: JSONPlaceholderTodo
@@ -21,25 +21,19 @@ export const transformJSONPlaceholderTodo = (
 	};
 };
 
-export const filterTasks = (
-	tasks: Task[],
-	filter: FilterType,
-	searchTerm: string
-): Task[] => {
-	let filtered = tasks;
+export const formatParams = (filters: Record<string, unknown>) => {
+	const formatParams = Object.fromEntries(
+		Object.entries(filters)
+			.filter(
+				([_, value]) => value !== undefined && value !== '' && value !== null
+			)
+			.map(([key, value]) => [key, String(value)])
+	);
 
-	if (filter !== 'all') {
-		filtered = filtered.filter(task => task.status === filter);
-	}
+	const params = new URLSearchParams({
+		_limit: '10',
+		...formatParams,
+	});
 
-	if (searchTerm.trim()) {
-		const term = searchTerm.toLowerCase().trim();
-		filtered = filtered.filter(
-			task =>
-				task.title.toLowerCase().includes(term) ||
-				task.description.toLowerCase().includes(term)
-		);
-	}
-
-	return filtered;
+	return params;
 };

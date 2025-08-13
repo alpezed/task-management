@@ -7,7 +7,7 @@ import { TaskListLoader } from './TaskListLoader';
 export function TaskList() {
 	const { tasks, loading, error } = useTaskContext();
 
-	console.log({ tasks });
+	console.log('--TaskList', { tasks });
 
 	if (loading) {
 		return <TaskListLoader />;
