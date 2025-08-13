@@ -1,4 +1,5 @@
 import { useTaskContext } from '../../context/TaskContext';
+import { TaskItemProvider } from '../../context/TaskItemContext';
 import { TaskItem } from '../TaskItem/TaskItem';
 import { TaskListError } from './TaskListError';
 import { TaskListLoader } from './TaskListLoader';
@@ -17,8 +18,14 @@ export function TaskList() {
 	}
 
 	return (
-		<div>
-			<TaskItem />
+		<div className='space-y-4' role='list' aria-label='Task list'>
+			{tasks?.map(task => (
+				<div key={task.id} role='listitem'>
+					<TaskItemProvider task={task}>
+						<TaskItem />
+					</TaskItemProvider>
+				</div>
+			))}
 		</div>
 	);
 }

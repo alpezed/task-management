@@ -43,11 +43,15 @@ const TaskForm = React.memo(() => {
 	);
 
 	if (!isOpen) {
-		return <AddNewTaskButton openForm={openForm} />;
+		return (
+			<div className='mb-8'>
+				<AddNewTaskButton openForm={openForm} />
+			</div>
+		);
 	}
 
 	return (
-		<div className='bg-white rounded-xl border border-gray-200 shadow-sm p-6'>
+		<div className='bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-8'>
 			<TaskFormHeader errors={errors} closeForm={closeForm} />
 
 			<form onSubmit={handleSubmit} className='space-y-4'>
