@@ -1,6 +1,7 @@
 import { useTaskContext } from '../../context/TaskContext';
 import { TaskItemProvider } from '../../context/TaskItemContext';
 import { TaskItem } from '../TaskItem/TaskItem';
+import { TaskListEmpty } from './TaskListEmpty';
 import { TaskListError } from './TaskListError';
 import { TaskListLoader } from './TaskListLoader';
 
@@ -13,6 +14,10 @@ export function TaskList() {
 
 	if (error) {
 		return <TaskListError>{error}</TaskListError>;
+	}
+
+	if (filteredTasks.length === 0) {
+		return <TaskListEmpty />;
 	}
 
 	return (
