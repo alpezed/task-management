@@ -60,3 +60,11 @@ export const createTask = (
 		updatedAt: now,
 	};
 };
+
+export const calculateTaskCounts = (tasks: Task[]) => {
+	const total = tasks.length;
+	const active = tasks.filter(task => task.status === 'active').length;
+	const completed = tasks.filter(task => task.status === 'completed').length;
+
+	return { total, active, completed };
+};

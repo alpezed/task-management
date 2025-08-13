@@ -5,14 +5,18 @@ import {
 	editTask,
 	fetchTasks,
 } from '../services/api';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type {
 	FilterParams,
 	FilterType,
 	JSONPlaceholderTodo,
 	Task,
 } from '../types/task';
-import { createTask, transformJSONPlaceholderTodo } from '../utils/taskHelper';
+import {
+	calculateTaskCounts,
+	createTask,
+	transformJSONPlaceholderTodo,
+} from '../utils/taskHelper';
 
 export function useTaskManager() {
 	const queryClient = useQueryClient();
@@ -122,6 +126,8 @@ export function useTaskManager() {
 		[filter, searchTerm, queryClient, updateTodo]
 	);
 
+	const taskCounts = useMemo(() => calculateTaskCounts(tasks ?? []), [tasks]);
+
 	return {
 		tasks,
 		loading: isLoading,
@@ -135,6 +141,7 @@ export function useTaskManager() {
 		addTask,
 		deleteTask: onDeleteTask,
 		updateTask,
+		taskCounts,
 	};
 }
 

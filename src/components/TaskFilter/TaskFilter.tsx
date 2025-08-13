@@ -1,15 +1,9 @@
 import React, { useCallback } from 'react';
 import type { FilterType } from '../../types/task';
-import { useTaskManager } from '../../hooks/useTaskManager';
+import { useTaskContext } from '../../context/TaskContext';
 
 const TaskFilter = React.memo(() => {
-	const { filter, setFilter } = useTaskManager();
-
-	const taskCounts = {
-		total: 100,
-		active: 50,
-		completed: 15,
-	};
+	const { filter, setFilter, taskCounts } = useTaskContext();
 
 	const handleFilterChange = useCallback(
 		(newFilter: FilterType) => {
