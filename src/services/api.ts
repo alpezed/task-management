@@ -36,7 +36,7 @@ export async function createNewTask(input: Partial<JSONPlaceholderTodo>) {
 	return await response.json();
 }
 
-export async function deleteTask(taskId: number) {
+export async function deleteTask(taskId: string) {
 	const response = await fetch(
 		`${import.meta.env.VITE_API_BASE_URL}/todos/${taskId}`,
 		{

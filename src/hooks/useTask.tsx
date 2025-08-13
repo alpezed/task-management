@@ -2,8 +2,11 @@ import { useCallback, useState } from 'react';
 
 import type { Task } from '../types/task';
 import { AlertCircle, CheckCircle, Clock } from 'lucide-react';
+import { useTaskContext } from '../context/TaskContext';
 
 export function useTask(task: Task) {
+	const { deleteTask } = useTaskContext();
+
 	const [isEditing, setIsEditing] = useState(false);
 	const [editTitle, setEditTitle] = useState(task.title);
 	const [editDescription, setEditDescription] = useState(task.description);
@@ -14,13 +17,15 @@ export function useTask(task: Task) {
 		// toggle task
 	}, []);
 
-	const handleDelete = useCallback((e: React.MouseEvent) => {
-		e.stopPropagation();
-		if (window.confirm('Are you sure you want to delete this task?')) {
-			// trigger delete task
-			alert('deleted');
-		}
-	}, []);
+	const handleDelete = useCallback(
+		(e: React.MouseEvent) => {
+			e.stopPropagation();
+			if (window.confirm('Are you sure you want to delete this task?')) {
+				deleteTask(task.id);
+			}
+		},
+		[task.id, deleteTask]
+	);
 
 	const handleEdit = useCallback((e: React.MouseEvent) => {
 		e.stopPropagation();
