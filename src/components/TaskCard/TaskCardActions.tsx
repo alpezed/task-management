@@ -5,6 +5,7 @@ export const TaskCardActions = ({ className }: { className?: string }) => {
 	const {
 		editTitle,
 		isEditing,
+		isSubmitting,
 		handleDelete,
 		handleEdit,
 		handleCancel,
@@ -26,7 +27,7 @@ export const TaskCardActions = ({ className }: { className?: string }) => {
 					</button>
 					<button
 						onClick={handleSave}
-						disabled={!editTitle.trim()}
+						disabled={isSubmitting || !editTitle.trim()}
 						className='px-3 py-1.5 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150'
 						aria-label='Save changes'
 					>

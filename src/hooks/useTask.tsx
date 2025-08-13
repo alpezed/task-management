@@ -5,9 +5,10 @@ import { AlertCircle, CheckCircle, Clock } from 'lucide-react';
 import { useTaskContext } from '../context/TaskContext';
 
 export function useTask(task: Task) {
-	const { deleteTask } = useTaskContext();
+	const { updateTask, deleteTask } = useTaskContext();
 
 	const [isEditing, setIsEditing] = useState(false);
+	const [isSubmitting, setSubmitting] = useState(false);
 	const [editTitle, setEditTitle] = useState(task.title);
 	const [editDescription, setEditDescription] = useState(task.description);
 	const [editPriority, setEditPriority] = useState(task.priority);
@@ -32,18 +33,25 @@ export function useTask(task: Task) {
 		setIsEditing(true);
 	}, []);
 
-	const handleSave = useCallback(() => {
+	const handleSave = useCallback(async () => {
+		setSubmitting(true);
 		if (editTitle.trim()) {
-			// trigger update task
+			await updateTask(task.id, {
+				title: editTitle,
+				description: editDescription,
+				priority: editPriority,
+			});
+			setSubmitting(false);
 			setIsEditing(false);
 		}
-	}, [editTitle]);
+	}, [task.id, editTitle, editDescription, editPriority, updateTask]);
 
 	const handleCancel = useCallback(() => {
 		setEditTitle(task.title);
 		setEditDescription(task.description);
 		setEditPriority(task.priority);
 		setIsEditing(false);
+		setSubmitting(false);
 	}, [task.title, task.description, task.priority]);
 
 	const handleKeyDown = useCallback(
@@ -93,6 +101,7 @@ export function useTask(task: Task) {
 		editDescription,
 		editPriority,
 		isEditing,
+		isSubmitting,
 		handleToggleStatus,
 		handleDelete,
 		handleEdit,

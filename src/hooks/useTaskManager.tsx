@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createNewTask, deleteTask, fetchTasks } from '../services/api';
+import {
+	createNewTask,
+	deleteTask,
+	editTask,
+	fetchTasks,
+} from '../services/api';
 import { useCallback, useState } from 'react';
 import type {
 	FilterParams,
@@ -46,6 +51,16 @@ export function useTaskManager() {
 		},
 	});
 
+	const { mutateAsync: updateTodo } = useMutation({
+		mutationFn: (data: {
+			id: string;
+			payload: Pick<Task, 'title' | 'description' | 'priority'>;
+		}) => editTask(data.id, data.payload),
+		onError: err => {
+			console.warn('Error deleting todo:', err);
+		},
+	});
+
 	const addTask = useCallback(
 		async (taskData: {
 			title: string;
@@ -80,6 +95,26 @@ export function useTaskManager() {
 		[filter, deleteTodo, queryClient, searchTerm]
 	);
 
+	const updateTask = useCallback(
+		async (
+			taskId: string,
+			payload: Pick<Task, 'title' | 'description' | 'priority'>
+		) => {
+			console.log(IdleDeadline, payload);
+			await updateTodo({ id: taskId, payload });
+
+			queryClient.setQueryData(
+				['tasks', { searchTerm, filter }],
+				(old: JSONPlaceholderTodo[]) =>
+					old.map(task => ({
+						...task,
+						...(task.id.toString() === taskId ? { ...payload } : task),
+					}))
+			);
+		},
+		[filter, searchTerm, queryClient, updateTodo]
+	);
+
 	return {
 		tasks,
 		loading: isLoading,
@@ -92,6 +127,7 @@ export function useTaskManager() {
 		setFilter,
 		addTask,
 		deleteTask: onDeleteTask,
+		updateTask,
 	};
 }
 
