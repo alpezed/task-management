@@ -57,7 +57,7 @@ export function useTaskManager() {
 			payload: Pick<Task, 'title' | 'description' | 'priority'>;
 		}) => editTask(data.id, data.payload),
 		onError: err => {
-			console.warn('Error deleting todo:', err);
+			console.warn('Error updating todo:', err);
 		},
 	});
 
@@ -67,17 +67,25 @@ export function useTaskManager() {
 			description: string;
 			priority: Task['priority'];
 		}) => {
-			await createTodo({ title: taskData.title, completed: false, userId: 1 });
+			await createTodo(
+				{ title: taskData.title, completed: false, userId: 1 },
+				{
+					onSuccess: data => {
+						const newTask = createTask(
+							taskData.title,
+							taskData.description,
+							taskData.priority
+						);
 
-			const newTask = createTask(
-				taskData.title,
-				taskData.description,
-				taskData.priority
-			);
-
-			queryClient.setQueryData(
-				['tasks', { searchTerm, filter }],
-				(old: JSONPlaceholderTodo[]) => [{ ...newTask, userId: 1 }, ...old]
+						queryClient.setQueryData(
+							['tasks', { searchTerm, filter }],
+							(old: JSONPlaceholderTodo[]) => [
+								{ ...newTask, id: data.id, userId: 1 },
+								...old,
+							]
+						);
+					},
+				}
 			);
 		},
 		[filter, searchTerm, queryClient, createTodo]
@@ -100,7 +108,6 @@ export function useTaskManager() {
 			taskId: string,
 			payload: Pick<Task, 'title' | 'description' | 'priority'>
 		) => {
-			console.log(IdleDeadline, payload);
 			await updateTodo({ id: taskId, payload });
 
 			queryClient.setQueryData(

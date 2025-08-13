@@ -7,6 +7,7 @@ import { cn } from '../../utils/cn';
 export const TaskCardHeader = ({ className }: { className?: string }) => {
 	const {
 		task,
+		error,
 		editTitle,
 		editDescription,
 		editPriority,
@@ -43,38 +44,50 @@ export const TaskCardHeader = ({ className }: { className?: string }) => {
 
 					<div className='flex-1 min-w-0'>
 						{isEditing ? (
-							<div className='space-y-3'>
-								<input
-									type='text'
-									value={editTitle}
-									onChange={e => setEditTitle(e.target.value)}
-									onKeyDown={handleKeyDown}
-									className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500'
-									placeholder='Task title'
-									aria-label='Edit task title'
-								/>
-								<textarea
-									value={editDescription}
-									onChange={e => setEditDescription(e.target.value)}
-									onKeyDown={handleKeyDown}
-									className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none'
-									rows={2}
-									placeholder='Task description'
-									aria-label='Edit task description'
-								/>
-								<select
-									value={editPriority}
-									onChange={e =>
-										setEditPriority(e.target.value as Task['priority'])
-									}
-									className='px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500'
-									aria-label='Edit task priority'
-								>
-									<option value='low'>Low Priority</option>
-									<option value='medium'>Medium Priority</option>
-									<option value='high'>High Priority</option>
-								</select>
-							</div>
+							<>
+								{error && (
+									<div
+										className='mb-4 p-3 bg-red-50 border border-red-200 rounded-lg'
+										role='alert'
+									>
+										<div className='text-sm text-red-700 space-y-1'>
+											{error}
+										</div>
+									</div>
+								)}
+								<div className='space-y-3'>
+									<input
+										type='text'
+										value={editTitle}
+										onChange={e => setEditTitle(e.target.value)}
+										onKeyDown={handleKeyDown}
+										className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500'
+										placeholder='Task title'
+										aria-label='Edit task title'
+									/>
+									<textarea
+										value={editDescription}
+										onChange={e => setEditDescription(e.target.value)}
+										onKeyDown={handleKeyDown}
+										className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none'
+										rows={2}
+										placeholder='Task description'
+										aria-label='Edit task description'
+									/>
+									<select
+										value={editPriority}
+										onChange={e =>
+											setEditPriority(e.target.value as Task['priority'])
+										}
+										className='px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500'
+										aria-label='Edit task priority'
+									>
+										<option value='low'>Low Priority</option>
+										<option value='medium'>Medium Priority</option>
+										<option value='high'>High Priority</option>
+									</select>
+								</div>
+							</>
 						) : (
 							<div className='space-y-2'>
 								<h3

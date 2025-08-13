@@ -12,6 +12,7 @@ export function useTask(task: Task) {
 	const [editTitle, setEditTitle] = useState(task.title);
 	const [editDescription, setEditDescription] = useState(task.description);
 	const [editPriority, setEditPriority] = useState(task.priority);
+	const [error, setError] = useState('');
 
 	const handleToggleStatus = useCallback((e: React.MouseEvent) => {
 		e.stopPropagation();
@@ -36,13 +37,22 @@ export function useTask(task: Task) {
 	const handleSave = useCallback(async () => {
 		setSubmitting(true);
 		if (editTitle.trim()) {
-			await updateTask(task.id, {
-				title: editTitle,
-				description: editDescription,
-				priority: editPriority,
-			});
-			setSubmitting(false);
-			setIsEditing(false);
+			try {
+				await updateTask(task.id, {
+					title: editTitle,
+					description: editDescription,
+					priority: editPriority,
+				});
+				setSubmitting(false);
+				setIsEditing(false);
+			} catch (error: unknown) {
+				if (error instanceof Error) {
+					setError(error.message);
+				} else {
+					setError(String(error));
+				}
+				setSubmitting(false);
+			}
 		}
 	}, [task.id, editTitle, editDescription, editPriority, updateTask]);
 
@@ -97,6 +107,7 @@ export function useTask(task: Task) {
 
 	return {
 		task,
+		error,
 		editTitle,
 		editDescription,
 		editPriority,
