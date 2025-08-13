@@ -6,6 +6,7 @@ import { TaskProvider } from './context/TaskContext';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './utils/reactQuery';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { SnackbarProvider } from 'notistack';
 
 function AppContent() {
 	return (
@@ -27,6 +28,7 @@ function App() {
 				<AppContent />
 			</TaskProvider>
 			<ReactQueryDevtools />
+			<SnackbarProvider />
 		</QueryClientProvider>
 	);
 }

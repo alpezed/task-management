@@ -13,6 +13,7 @@ import {
 	filterTasks,
 	transformJSONPlaceholderTodo,
 } from '../utils/taskHelper';
+import { enqueueSnackbar } from 'notistack';
 
 export function useTaskManager() {
 	const queryClient = useQueryClient();
@@ -33,15 +34,29 @@ export function useTaskManager() {
 
 	const { mutateAsync: createTodo, isPending: isAddingTask } = useMutation({
 		mutationFn: (data: Partial<JSONPlaceholderTodo>) => createNewTask(data),
-		onError: err => {
-			console.warn('Failed to sync new task with API:', err);
+		onError: () => {
+			enqueueSnackbar('Error creating task', {
+				variant: 'error',
+			});
+		},
+		onSuccess: () => {
+			enqueueSnackbar('Task created successfully', {
+				variant: 'success',
+			});
 		},
 	});
 
 	const { mutateAsync: deleteTodo } = useMutation({
 		mutationFn: deleteTask,
-		onError: err => {
-			console.warn('Error deleting todo:', err);
+		onError: () => {
+			enqueueSnackbar('Error deleting task', {
+				variant: 'error',
+			});
+		},
+		onSuccess: () => {
+			enqueueSnackbar('Task deleted successfully', {
+				variant: 'success',
+			});
 		},
 	});
 
@@ -50,8 +65,20 @@ export function useTaskManager() {
 			id: string;
 			payload: Pick<Partial<JSONPlaceholderTodo>, 'title' | 'completed'>;
 		}) => editTask(data.id, data.payload),
-		onError: err => {
-			console.warn('Error updating todo:', err);
+		onError: () => {
+			enqueueSnackbar('Error updating task', {
+				variant: 'error',
+			});
+		},
+		onSuccess: data => {
+			enqueueSnackbar(
+				<p>
+					Task <strong>"{data.title}"</strong> updated successfully
+				</p>,
+				{
+					variant: 'success',
+				}
+			);
 		},
 	});
 
