@@ -94,17 +94,5 @@ export const filterTasks = (
 		);
 	}
 
-	return filtered.sort((a, b) => {
-		// Sort by status (active first), then by priority, then by creation date
-		if (a.status !== b.status) {
-			return a.status === 'active' ? -1 : 1;
-		}
-
-		const priorityOrder = { high: 3, medium: 2, low: 1 };
-		if (a.priority !== b.priority) {
-			return priorityOrder[b.priority] - priorityOrder[a.priority];
-		}
-
-		return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-	});
+	return filtered;
 };

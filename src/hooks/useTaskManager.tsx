@@ -72,7 +72,7 @@ export function useTaskManager() {
 						);
 
 						queryClient.setQueryData(
-							['tasks', { searchTerm, filter }],
+							['tasks'],
 							(old: JSONPlaceholderTodo[]) => [
 								{ ...newTask, id: data.id, userId: 1 },
 								...old,
@@ -82,19 +82,17 @@ export function useTaskManager() {
 				}
 			);
 		},
-		[filter, searchTerm, queryClient, createTodo]
+		[queryClient, createTodo]
 	);
 
 	const onDeleteTask = useCallback(
 		async (todoId: string) => {
 			await deleteTodo(todoId);
-			queryClient.setQueryData(
-				['tasks', { searchTerm, filter }],
-				(tasks: JSONPlaceholderTodo[]) =>
-					tasks.filter(task => task.id.toString() !== todoId)
+			queryClient.setQueryData(['tasks'], (tasks: JSONPlaceholderTodo[]) =>
+				tasks.filter(task => task.id.toString() !== todoId)
 			);
 		},
-		[filter, deleteTodo, queryClient, searchTerm]
+		[deleteTodo, queryClient]
 	);
 
 	const updateTask = useCallback(
@@ -104,16 +102,14 @@ export function useTaskManager() {
 		) => {
 			await updateTodo({ id: taskId, payload });
 
-			queryClient.setQueryData(
-				['tasks', { searchTerm, filter }],
-				(old: JSONPlaceholderTodo[]) =>
-					old.map(task => ({
-						...task,
-						...(task.id.toString() === taskId ? { ...payload } : task),
-					}))
+			queryClient.setQueryData(['tasks'], (old: JSONPlaceholderTodo[]) =>
+				old.map(task => ({
+					...task,
+					...(task.id.toString() === taskId ? { ...payload } : task),
+				}))
 			);
 		},
-		[filter, searchTerm, queryClient, updateTodo]
+		[queryClient, updateTodo]
 	);
 
 	const filteredTasks = useMemo(
