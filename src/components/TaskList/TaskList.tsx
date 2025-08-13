@@ -1,13 +1,19 @@
-import { useTaskManager } from "../../hooks/useTaskManager";
-import { TaskItem } from "../TaskItem/TaskItem";
+import { useTaskContext } from '../../context/TaskContext';
+import { TaskItem } from '../TaskItem/TaskItem';
+import { TaskListError } from './TaskListError';
+import { TaskListLoader } from './TaskListLoader';
 
 export function TaskList() {
-	const { tasks, loading } = useTaskManager();
+	const { tasks, loading, error } = useTaskContext();
 
 	console.log({ tasks });
 
 	if (loading) {
-		return <div>Loading...</div>;
+		return <TaskListLoader />;
+	}
+
+	if (error) {
+		return <TaskListError>{error}</TaskListError>;
 	}
 
 	return (

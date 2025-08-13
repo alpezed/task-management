@@ -1,15 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchTasks } from "../services/api";
+import { useQuery } from '@tanstack/react-query';
+import { fetchTasks } from '../services/api';
 
 export function useTaskManager() {
-	const { data: tasks, isLoading } = useQuery({
-		queryKey: ["tasks"],
+	const {
+		data: tasks,
+		isLoading,
+		error,
+		refetch,
+	} = useQuery({
+		queryKey: ['tasks'],
 		queryFn: fetchTasks,
+		retry: 1,
 	});
 
 	return {
-		loading: isLoading,
 		tasks,
+		loading: isLoading,
+		error: error?.message,
+		refreshTasks: refetch,
 	};
 }
 

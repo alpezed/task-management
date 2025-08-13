@@ -1,4 +1,4 @@
-import type { JSONPlaceholderTodo } from "../types/task";
+import type { JSONPlaceholderTodo } from '../types/task';
 
 export async function fetchTasks() {
 	const result = await fetch(
@@ -6,8 +6,7 @@ export async function fetchTasks() {
 	);
 
 	if (!result.ok) {
-		const error = await result.json();
-		throw new Error(error.message);
+		throw new Error(`Failed to fetch todos`);
 	}
 
 	const response = (await result.json()) as JSONPlaceholderTodo[];
