@@ -1,70 +1,104 @@
-# React + TypeScript + Vite
+# Task Management Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern task management application built with React, TypeScript, and Vite. This application allows users to create, view, filter, and manage tasks with different priorities and statuses.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Create new tasks with title, description, and priority
+- Mark tasks as active or completed
+- Filter tasks by status (all, active, completed)
+- Sort tasks by priority
+- Responsive design with Tailwind CSS
+- Data fetching with React Query
 
-## Expanding the ESLint configuration
+## Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Node.js (v20 or higher)
+- npm, yarn, or pnpm
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Setup Instructions
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### 1. Clone the repository
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone <repository-url>
+cd task-management
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Install dependencies
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Using npm:
+```bash
+npm install
 ```
-# task-management
+
+Using yarn:
+```bash
+yarn
+```
+
+Using pnpm:
+```bash
+pnpm install
+```
+
+### 3. Environment Setup
+
+Create a `.env` file in the root directory based on the provided `.env.example`:
+
+```bash
+cp .env.example .env
+```
+
+Then edit the `.env` file to set your API base URL:
+
+```
+VITE_API_BASE_URL=https://jsonplaceholder.typicode.com
+```
+
+### 4. Start the development server
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+```
+
+The application will be available at http://localhost:5173
+
+## Available Scripts
+
+- `dev`: Start the development server
+- `build`: Build the application for production
+- `lint`: Run ESLint to check for code issues
+- `preview`: Preview the production build locally
+
+## Technologies Used
+
+- React 19
+- TypeScript
+- Vite
+- TailwindCSS
+- React Query
+- Lucide React (for icons)
+
+## Project Structure
+
+```
+src/
+├── assets/        # Static assets
+├── components/    # React components
+├── context/       # React context providers
+├── hooks/         # Custom React hooks
+├── services/      # API services
+├── types/         # TypeScript type definitions
+├── utils/         # Utility functions
+├── App.tsx        # Main application component
+└── main.tsx       # Application entry point
+```
+
+## License
+
+MIT
