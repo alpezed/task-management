@@ -4,7 +4,7 @@ import Controls from './components/Controls/Controls';
 import TaskForm from './components/TaskForm/TaskForm';
 import { TaskProvider } from './context/TaskContext';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { queryClient } from './utils/react-query';
+import { queryClient } from './utils/reactQuery';
 
 function AppContent() {
 	return (
