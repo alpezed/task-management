@@ -39,26 +39,7 @@ export function TaskList() {
 			return;
 		}
 
-		setAllItems(prev => {
-			const existingIds = new Set(filteredTasks.map(t => t.id));
-
-			// Remove deleted tasks
-			const cleaned = prev.filter(t => existingIds.has(t.id));
-
-			// Update existing ones with new data
-			const updated = cleaned.map(oldTask => {
-				const newTask = filteredTasks.find(t => t.id === oldTask.id);
-				return newTask ?? oldTask;
-			});
-
-			// Find new tasks not in prev
-			const newOnes = filteredTasks.filter(
-				t => !prev.some(old => old.id === t.id)
-			);
-
-			// New ones go to the top
-			return [...newOnes, ...updated];
-		});
+		setAllItems(filteredTasks);
 	}, [filteredTasks]);
 
 	async function handleDragEnd(event: DragEndEvent) {
