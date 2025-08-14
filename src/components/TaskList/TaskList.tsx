@@ -14,6 +14,7 @@ import {
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 import { useTaskContext } from "../../context/TaskContext";
 import { TaskListEmpty } from "./TaskListEmpty";
@@ -21,7 +22,6 @@ import { TaskListError } from "./TaskListError";
 import { TaskListItem } from "./TaskListItem";
 import { TaskListLoader } from "./TaskListLoader";
 import type { Task } from "../../types/task";
-import { useEffect, useState } from "react";
 
 export function TaskList() {
 	const queryClient = useQueryClient();
