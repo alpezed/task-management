@@ -1,8 +1,10 @@
-import { Edit2, Trash } from 'lucide-react';
-import { useTaskItemContext } from '../../context/TaskItemContext';
+import { Edit2, GripVertical, Trash } from "lucide-react";
+import { useTaskItemContext } from "../../context/TaskItemContext";
+import { useDraggable } from "@dnd-kit/core";
 
 export const TaskCardActions = ({ className }: { className?: string }) => {
 	const {
+		task,
 		editTitle,
 		isEditing,
 		isSubmitting,
@@ -11,6 +13,9 @@ export const TaskCardActions = ({ className }: { className?: string }) => {
 		handleCancel,
 		handleSave,
 	} = useTaskItemContext();
+	const { listeners } = useDraggable({
+		id: task.id,
+	});
 
 	return (
 		<div
@@ -49,6 +54,9 @@ export const TaskCardActions = ({ className }: { className?: string }) => {
 						aria-label='Delete task'
 					>
 						<Trash className='w-4 h-4' />
+					</button>
+					<button type='button' title='Drag and sort task' {...listeners}>
+						<GripVertical className='w-4 h-4 text-gray-400 cursor-move' />
 					</button>
 				</>
 			)}
