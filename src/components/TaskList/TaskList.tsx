@@ -35,29 +35,31 @@ export function TaskList() {
 
 	useEffect(() => {
 		if (!filteredTasks.length) {
-			setAllItems([]); // nothing left
+			setAllItems([]);
 			return;
 		}
 
 		setAllItems(prev => {
-			// Remove tasks that no longer exist
 			const existingIds = new Set(filteredTasks.map(t => t.id));
+
+			// Remove deleted tasks
 			const cleaned = prev.filter(t => existingIds.has(t.id));
 
-			// Update existing tasks with new data
+			// Update existing ones with new data
 			const updated = cleaned.map(oldTask => {
 				const newTask = filteredTasks.find(t => t.id === oldTask.id);
 				return newTask ?? oldTask;
 			});
 
-			// Add new tasks that weren't in prev
+			// Find new tasks not in prev
 			const newOnes = filteredTasks.filter(
 				t => !prev.some(old => old.id === t.id)
 			);
 
-			return [...updated, ...newOnes];
+			// New ones go to the top
+			return [...newOnes, ...updated];
 		});
-	}, [filteredTasks, allItems.length]);
+	}, [filteredTasks]);
 
 	async function handleDragEnd(event: DragEndEvent) {
 		const { active, over } = event;
