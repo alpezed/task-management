@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import type { Task } from '../types/task';
 import { AlertCircle, CheckCircle, Clock } from 'lucide-react';
@@ -13,6 +13,15 @@ export function useTask(task: Task) {
 	const [editDescription, setEditDescription] = useState(task.description);
 	const [editPriority, setEditPriority] = useState(task.priority);
 	const [error, setError] = useState('');
+
+	useEffect(() => {
+		setEditTitle(task.title);
+		setEditDescription(task.description);
+		setEditPriority(task.priority);
+		setError('');
+		setIsEditing(false);
+		setSubmitting(false);
+	}, [task.title, task.description, task.priority, task.id, task.status]);
 
 	const handleToggleStatus = useCallback(
 		(e: React.MouseEvent) => {
