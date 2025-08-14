@@ -21,7 +21,7 @@ const mockResponse = [
 	},
 ];
 
-describe('TaskForm', () => {
+describe('TaskListItem', () => {
 	it('should render atleast 1 task', () => {
 		(useTaskContext as Mock).mockReturnValue({
 			filteredTasks: mockResponse,
