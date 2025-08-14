@@ -21,6 +21,7 @@ import { TaskListItem } from "./TaskListItem";
 import { TaskListLoader } from "./TaskListLoader";
 import { useEffect, useState } from "react";
 import type { Task } from "../../types/task";
+import { queryClient } from "../../utils/reactQuery";
 
 export function TaskList() {
 	const { filteredTasks, loading, error } = useTaskContext();
@@ -45,8 +46,9 @@ export function TaskList() {
 			setAllItems(items => {
 				const oldIndex = items.findIndex(item => item.id === active.id);
 				const newIndex = items.findIndex(item => item.id === over?.id);
-				// Use arrayMove to reorder the items
-				return arrayMove(items, oldIndex, newIndex);
+				const updatedItems = arrayMove(items, oldIndex, newIndex);
+				queryClient.setQueryData(["tasks"], updatedItems);
+				return updatedItems;
 			});
 		}
 	}
