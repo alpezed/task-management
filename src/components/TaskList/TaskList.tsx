@@ -13,7 +13,6 @@ import {
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 import { useTaskContext } from "../../context/TaskContext";
@@ -22,9 +21,9 @@ import { TaskListError } from "./TaskListError";
 import { TaskListItem } from "./TaskListItem";
 import { TaskListLoader } from "./TaskListLoader";
 import type { Task } from "../../types/task";
+import { queryClient } from "../../utils/reactQuery";
 
 export function TaskList() {
-	const queryClient = useQueryClient();
 	const { filteredTasks, loading, error } = useTaskContext();
 	const [allItems, setAllItems] = useState<Task[]>(filteredTasks || []);
 	const sensors = useSensors(
@@ -97,7 +96,7 @@ export function TaskList() {
 				onDragEnd={handleDragEnd}
 			>
 				<SortableContext
-					items={allItems.map(task => String(task.id))}
+					items={allItems}
 					strategy={verticalListSortingStrategy}
 				>
 					{allItems?.map(task => (

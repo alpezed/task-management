@@ -12,6 +12,7 @@ describe('TaskList', () => {
 		(useTaskContext as Mock).mockReturnValue({
 			loading: true,
 			error: null,
+			filteredTasks: [],
 		});
 		render(<TaskList />);
 		expect(screen.getByText(/loading/i)).toBeInTheDocument();
