@@ -26,12 +26,7 @@ export function TaskList() {
 	const { filteredTasks, loading, error } = useTaskContext();
 	const [allItems, setAllItems] = useState<Task[]>(filteredTasks);
 	const sensors = useSensors(
-		useSensor(PointerSensor, {
-			// activationConstraint: {
-			// 	delay: 20,
-			// 	tolerance: 5,
-			// },
-		}),
+		useSensor(PointerSensor),
 		useSensor(KeyboardSensor, {
 			coordinateGetter: sortableKeyboardCoordinates,
 		})
