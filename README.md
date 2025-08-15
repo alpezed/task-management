@@ -28,16 +28,19 @@ cd task-management
 ### 2. Install dependencies
 
 Using npm:
+
 ```bash
 npm install
 ```
 
 Using yarn:
+
 ```bash
 yarn
 ```
 
 Using pnpm:
+
 ```bash
 pnpm install
 ```
@@ -82,6 +85,7 @@ The application will be available at http://localhost:5173
 - Vite
 - TailwindCSS
 - React Query
+- Dnd Kit
 - Lucide React (for icons)
 
 ## Project Structure
